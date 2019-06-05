@@ -268,8 +268,8 @@ class HipayConfigFormHandler
                 foreach ($conf as $key => $value) {
                     if (in_array($key, $keySaved)) {
                         $fieldValue = Tools::getValue($card . "_" . $key);
-                        if ($key == "currencies") {
-                            foreach (Tools::getValue($card . "_" . $key) as $currency) {
+                        if ($key == "currencies" && $fieldValue) {
+                            foreach ($fieldValue as $currency) {
                                 if (!in_array($currency, $this->module->moduleCurrencies)) {
                                     $this->dbUtils->setCurrencies($this->module->id, $context->shop->id, $currency);
                                 }
@@ -324,13 +324,14 @@ class HipayConfigFormHandler
             );
 
             foreach ($this->module->hipayConfigTool->getLocalPayment() as $card => $conf) {
+
                 $keySaved = array_merge($conf["displayConfigurationFields"], $keySavedBase);
                 foreach ($conf as $key => $value) {
                     //prevent specific fields from being updated
                     if (in_array($key, $keySaved)) {
                         $fieldValue = Tools::getValue($card . "_" . $key);
-                        if ($key == "currencies") {
-                            foreach (Tools::getValue($card . "_" . $key) as $currency) {
+                        if ($key == "currencies" && $fieldValue) {
+                            foreach ($fieldValue as $currency) {
                                 if (!in_array($currency, $this->module->moduleCurrencies)) {
                                     $this->dbUtils->setCurrencies($this->module->id, $context->shop->id, $currency);
                                 }
