@@ -12,6 +12,8 @@
  */
 
 require_once(dirname(__FILE__) . '/enums/OperatingMode.php');
+require_once(dirname(__FILE__) . '/enums/OperatingMode.php');
+require_once(dirname(__FILE__) . '/dbquery/HipayDBUtils.php');
 
 /**
  * Handle config form data savings
@@ -33,6 +35,7 @@ class HipayConfigFormHandler
     {
         $this->context = Context::getContext();
         $this->module = $module_instance;
+        $this->dbUtils = new HipayDBUtils($this->module);
     }
 
     /**
@@ -63,7 +66,9 @@ class HipayConfigFormHandler
                         Tools::getValue("api_password_sandbox") &&
                         !Tools::getValue("api_username_sandbox"))
                 ) {
-                    $this->module->_errors[] = $this->module->l("If sandbox api username is filled sandbox api password is mandatory");
+                    $this->module->_errors[] = $this->module->l(
+                        "If sandbox api username is filled sandbox api password is mandatory"
+                    );
                     return false;
                 } elseif (($key == "api_tokenjs_username_sandbox" &&
                         Tools::getValue("api_tokenjs_username_sandbox") &&
@@ -72,7 +77,9 @@ class HipayConfigFormHandler
                         Tools::getValue("api_tokenjs_password_publickey_sandbox") &&
                         !Tools::getValue("api_tokenjs_username_sandbox"))
                 ) {
-                    $this->module->_errors[] = $this->module->l("If sandbox api TokenJS username is filled sandbox api TokenJS password is mandatory");
+                    $this->module->_errors[] = $this->module->l(
+                        "If sandbox api TokenJS username is filled sandbox api TokenJS password is mandatory"
+                    );
                     return false;
                 } elseif (($key == "api_moto_username_sandbox" &&
                         Tools::getValue("api_moto_username_sandbox") &&
@@ -84,7 +91,9 @@ class HipayConfigFormHandler
                             "api_moto_username_sandbox"
                         ))
                 ) {
-                    $this->module->_errors[] = $this->module->l("If sandbox api MO/TO username is filled sandbox api MO/TO password is mandatory");
+                    $this->module->_errors[] = $this->module->l(
+                        "If sandbox api MO/TO username is filled sandbox api MO/TO password is mandatory"
+                    );
                     return false;
                 } else {
                     if ($key == "api_secret_passphrase_sandbox" || $key == "api_moto_secret_passphrase_sandbox") {
@@ -106,7 +115,9 @@ class HipayConfigFormHandler
                         Tools::getValue("api_password_production") &&
                         !Tools::getValue("api_username_production"))
                 ) {
-                    $this->module->_errors[] = $this->module->l("If production api username is filled production api password is mandatory");
+                    $this->module->_errors[] = $this->module->l(
+                        "If production api username is filled production api password is mandatory"
+                    );
                     return false;
                 } elseif (($key == "api_tokenjs_username_production" &&
                         Tools::getValue("api_tokenjs_username_production") &&
@@ -115,7 +126,9 @@ class HipayConfigFormHandler
                         Tools::getValue("api_tokenjs_password_publickey_production") &&
                         !Tools::getValue("api_tokenjs_username_production"))
                 ) {
-                    $this->module->_errors[] = $this->module->l("If production api TokenJS username is filled production api TokenJS password is mandatory");
+                    $this->module->_errors[] = $this->module->l(
+                        "If production api TokenJS username is filled production api TokenJS password is mandatory"
+                    );
                     return false;
                 } elseif (($key == "api_moto_username_production" &&
                         Tools::getValue("api_moto_username_production") &&
@@ -125,7 +138,9 @@ class HipayConfigFormHandler
                         Tools::getValue("api_moto_password_production") &&
                         !Tools::getValue("api_moto_username_production"))
                 ) {
-                    $this->module->_errors[] = $this->module->l("If production api MO/TO username is filled production api MO/TO password is mandatory");
+                    $this->module->_errors[] = $this->module->l(
+                        "If production api MO/TO username is filled production api MO/TO password is mandatory"
+                    );
                     return false;
                 } else {
                     if ($key == "api_secret_passphrase_production" || $key == "api_moto_secret_passphrase_production") {
@@ -256,7 +271,7 @@ class HipayConfigFormHandler
                         if ($key == "currencies") {
                             foreach (Tools::getValue($card . "_" . $key) as $currency) {
                                 if (!in_array($currency, $this->module->moduleCurrencies)) {
-                                    $this->module->db->setCurrencies($this->module->id, $context->shop->id, $currency);
+                                    $this->dbUtils->setCurrencies($this->module->id, $context->shop->id, $currency);
                                 }
                             }
                         }
@@ -317,7 +332,7 @@ class HipayConfigFormHandler
                         if ($key == "currencies") {
                             foreach (Tools::getValue($card . "_" . $key) as $currency) {
                                 if (!in_array($currency, $this->module->moduleCurrencies)) {
-                                    $this->module->db->setCurrencies($this->module->id, $context->shop->id, $currency);
+                                    $this->dbUtils->setCurrencies($this->module->id, $context->shop->id, $currency);
                                 }
                             }
                         }
